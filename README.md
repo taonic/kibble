@@ -26,7 +26,7 @@ This sequence assumes
 ~/kibble/helm-chart$ helm install kibble . \
   --set-file 'ca_cert=<replace with path to CA cert>' \
   --set-file 'ca_key=<replace with path to CA key>' \
-  --set prom_endpoint=https://<temporal-account-id>.tmprl.cloud/prometheus
+  --set prom_endpoint=https://<temporal-account-id>.tmprl.cloud/prometheus \
   --set dd_api_key=${DD_API_KEY}
 ```
 
