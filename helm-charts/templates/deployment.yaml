@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "kibble.name" . }}
+  labels:
+    app: {{ template "kibble.name" . }}
+    chart: {{ template "kibble.chart" . }}
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "kibble.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "kibble.name" . }}
+        release: {{ .Release.Name }}
+      annotations:
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+    spec:
+      containers:
+      - name: kibble
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.imagePullPolicy }}
+        command: ["/kibble"]
+        args:
+        - --client-cert=/var/run/secrets/ca_cert
+        - --client-key=/var/run/secrets/ca_key
+        - --prom-endpoint={{ .Values.prom_endpoint }}
+        env:
+        - name: DD_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "kibble.name" . }}-secrets
+              key: dd_api_key
+        volumeMounts:
+        - name: secrets
+          mountPath: /var/run/secrets
+          readOnly: true
+      volumes:
+      - name: secrets
+        secret:
+          secretName: {{ template "kibble.name" . }}-secrets
