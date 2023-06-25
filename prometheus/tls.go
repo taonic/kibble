@@ -11,7 +11,7 @@ import (
 func BuildTLSConfig(clientCert, clientKey, serverRootCACert, serverName string, insecureSkipVerify bool) (*tls.Config, error) {
 	cert, err := tls.LoadX509KeyPair(clientCert, clientKey)
 	if err != nil {
-		log.Fatalf("failed load key pairs: %w", err)
+		log.Fatalf("failed load key pairs: %s", err)
 	}
 
 	// Load server CA if given

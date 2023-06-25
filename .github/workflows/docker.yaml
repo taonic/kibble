@@ -17,10 +17,13 @@ env:
   IMAGE_NAME: kibble
 
 jobs:
+  test:
+    uses: ./.github/workflows/test.yaml
   # Push image to GitHub Packages.
   # See also https://docs.docker.com/docker-hub/builds/
   push:
     runs-on: ubuntu-latest
+    needs: test
     permissions:
       packages: write
       contents: read
