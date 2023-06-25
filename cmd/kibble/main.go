@@ -18,9 +18,9 @@ func main() {
 	clientCert := set.String("client-cert", "", "Required path to client cert")
 	clientKey := set.String("client-key", "", "Required path to client key")
 	serverName := set.String("server-name", "", "Server name to use for verifying the server's certificate")
-	stepDuration := set.Int("step-duration", 15, "The step between metrics")
-	queryInterval := set.Int("query-interval", 60, "Interval between each Prometheus query")
 	insecureSkipVerify := set.Bool("insecure-skip-verify", false, "Skip verification of the server's certificate and host name")
+	stepDuration := set.Int("step-duration-seconds", 60, "The step between metrics")
+	queryInterval := set.Int("query-interval-seconds", 600, "Interval between each Prometheus query")
 
 	if err := set.Parse(os.Args[1:]); err != nil {
 		log.Fatalf("failed parsing args: %s", err)
