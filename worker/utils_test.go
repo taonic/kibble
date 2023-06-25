@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/DataDog/datadog-api-client-go/v2/api/datadogV2"
-	"github.com/go-test/deep"
 	"github.com/prometheus/common/model"
+	"github.com/stretchr/testify/assert"
 )
 
 func Ptr[T any](v T) *T {
@@ -96,12 +96,13 @@ func TestPromMatrixToDatadogSeries(t *testing.T) {
 		tc := tc
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
-			if diff := deep.Equal(PromHistogramToDatadogGauge(tc.metricName, tc.quantile, tc.matrix), tc.wantSeries); diff != nil {
-				t.Error(diff)
+			gotSeries := PromHistogramToDatadogGauge(tc.metricName, tc.quantile, tc.matrix)
+			for i := range gotSeries {
+				assert.Equal(t, gotSeries[i].Metric, tc.wantSeries[i].Metric)
+				assert.Equal(t, gotSeries[i].Type, tc.wantSeries[i].Type)
+				assert.ElementsMatch(t, gotSeries[i].Points, tc.wantSeries[i].Points)
+				assert.ElementsMatch(t, gotSeries[i].Resources, tc.wantSeries[i].Resources)
 			}
 		})
 	}
-}
-
-func TestPromCountToDatadogGauge(t *testing.T) {
 }
