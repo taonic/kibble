@@ -14,7 +14,7 @@ import (
 
 type (
 	Querier interface {
-		ListMetrics() ([]string, []string, error)
+		ListMetrics(prefixFilter string) ([]string, []string, error)
 		QueryMetrics(promql string, queryRange promapi.Range) (model.Matrix, error)
 	}
 
@@ -56,7 +56,7 @@ func NewAPIClient(cfg Config) (*APIClient, error) {
 	return &APIClient{promapi.NewAPI(client)}, nil
 }
 
-func (c *APIClient) ListMetrics() ([]string, []string, error) {
+func (c *APIClient) ListMetrics(prefixFilter string) ([]string, []string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -67,7 +67,7 @@ func (c *APIClient) ListMetrics() ([]string, []string, error) {
 	buckets := []string{}
 	counts := []string{}
 	for _, v := range values {
-		if !strings.HasPrefix(string(v), "temporal_cloud_") {
+		if !strings.HasPrefix(string(v), prefixFilter) {
 			continue
 		}
 		if strings.HasSuffix(string(v), "_bucket") {

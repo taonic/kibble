@@ -25,9 +25,9 @@ make
 
 ```
 ./kibble \
+  --prom-endpoint https://<temporal-account-id>.tmprl.cloud/prometheus \
   --client-cert <replace with the path to CA cert> \
-  --client-key <replace with the path to CA key> \
-  --prom-endpoint https://<temporal-account-id>.tmprl.cloud/prometheus
+  --client-key <replace with the path to CA key>
 ```
 
 # Install Kibble on a Kubernetes cluster
@@ -46,10 +46,10 @@ Run below command from the `helm-charts` folder.
 
 ```
 helm install kibble . \
-  --set-file 'ca_cert=<replace with the path to CA cert>' \
-  --set-file 'ca_key=<replace with the path to CA key>' \
   --set prom_endpoint=https://<temporal-account-id>.tmprl.cloud/prometheus \
-  --set dd_api_key=${DD_API_KEY}
+  --set dd_api_key=${DD_API_KEY} \
+  --set-file 'ca_cert=<replace with the path to CA cert>' \
+  --set-file 'ca_key=<replace with the path to CA key>'
 ```
 
 ## Verify Kibble is running
